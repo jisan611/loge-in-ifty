@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>লগইন পেজ - রিডাইরেক্ট সিস্টেম</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Hind Siliguri', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('https://picsum.photos/1600/900?blur=5') no-repeat center center/cover;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6));
+      z-index: -1;
+    }
+    
+    .login-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1.2s ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      transform: rotate(0deg);
+      transition: transform 1s;
+      pointer-events: none;
+    }
+    
+    .login-container:hover::before {
+      transform: rotate(180deg);
+    }
+    
+    .login-container h2 {
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 600;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .login-container input {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.85);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .login-container input:focus {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #667eea;
+      font-size: 18px;
+    }
+    
+    .login-container button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .login-container button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .login-container button:hover::before {
+      left: 100%;
+    }
+    
+    .login-container button:hover {
+      background: linear-gradient(135deg, #5563c1, #5c3c8a);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .login-container button:active {
+      transform: translateY(0);
+    }
+    
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    
+    .remember-forgot label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .remember-forgot input {
+      width: auto;
+      margin-right: 8px;
+    }
+    
+    .extra {
+      margin-top: 25px;
+      font-size: 14px;
+    }
+    
+    .extra a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      position: relative;
+    }
+    
+    .extra a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: white;
+      transition: width 0.3s;
+    }
+    
+    .extra a:hover::after {
+      width: 100%;
+    }
+    
+    .social-login {
+      margin: 25px 0;
+      position: relative;
+    }
+    
+    .social-login::before {
+      content: 'অথবা দিয়ে続けて';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0 15px;
+      font-size: 14px;
+    }
+    
+    .social-login::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .social-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 20px;
+      transition: 0.3s;
+    }
+    
+    .social-icons a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    .error-message {
+      color: #ff6b6b;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: left;
+      display: none;
+    }
+    
+    .loading {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .redirect-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+    
+    .redirect-info h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 5px;
+    }
+    
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 30px 20px;
+        width: 95%;
+      }
+      
+      .remember-forgot {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>ইফতি mc লগ ইন কর</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" placeholder="ব্যবহারকারীর নাম" required>
+      </div>
+      <div class="error-message" id="usernameError">সঠিক ব্যবহারকারীর নাম দিন</div>
+      
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
+      </div>
+      <div class="error-message" id="passwordError">পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে</div>
+      
+      <div class="remember-forgot">
+        <label>
+          <input type="checkbox"> আমাকে মনে রাখুন
+        </label>
+        <a href="#">পাসওয়ার্ড ভুলে গেছেন?</a>
+      </div>
+      
+      <button type="submit" id="loginButton">
+        <span>লগইন</span>
+        <div class="loading" id="loadingSpinner"></div>
+      </button>
+    </form>
+    
+    <div class="social-login">
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-google"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="extra">
+      <p>নতুন ব্যবহারকারী? <a href="#">অ্যাকাউন্ট তৈরি করুন</a></p>
+    </div>
+    
+    <div class="redirect-info">
+      <h3>রিডাইরেক্ট সিস্টেম:</h3>
+      <p>সফল লগইন হওয়ার পর আপনি স্বয়ংক্রিয়ভাবে ড্যাশবোর্ড পেজে রিডাইরেক্ট হবেন।</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const usernameError = document.getElementById('usernameError');
+      const passwordError = document.getElementById('passwordError');
+      const loginButton = document.getElementById('loginButton');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      
+      let isValid = true;
+      
+      // Reset errors
+      usernameError.style.display = 'none';
+      passwordError.style.display = 'none';
+      
+      // Validate username
+      if (username.length < 3) {
+        usernameError.style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate password
+      if (password.length < 6) {
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        // Add shake animation to form
+        document.querySelector('.login-container').style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          document.querySelector('.login-container').style.animation = '';
+        }, 500);
+        return;
+      }
+      
+      // Show loading state
+      loginButton.disabled = true;
+      loadingSpinner.style.display = 'block';
+      loginButton.querySelector('span').style.visibility = 'hidden';
+      
+      // Simulate API call
+      setTimeout(() => {
+        // Reset loading state
+        loginButton.disabled = false;
+        loadingSpinner.style.display = 'none';
+        loginButton.querySelector('span').style.visibility = 'visible';
+        
+        // Show success message and redirect
+        alert('লগইন সফল! আপনাকে ড্যাশবোর্ড পেজে রিডাইরেক্ট করা হচ্ছে...');
+        
+        // Redirect to dashboard page after successful login
+        window.location.href = "dashboard.html";
+      }, 1500);
+    });
+    
+    // Add input validation on the fly
+    document.getElementById('username').addEventListener('input', function() {
+      if (this.value.length >= 3) {
+        document.getElementById('usernameError').style.display = 'none';
+      }
+    });
+    
+    document.getElementById('password').addEventListener('input', function() {
+      if (this.value.length >= 6) {
+        document.getElementById('passwordError').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
