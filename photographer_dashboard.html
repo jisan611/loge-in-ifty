@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ফটোগ্রাফার ড্যাশবোর্ড</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Hind Siliguri',sans-serif;}
+    :root{
+      --primary:#667eea;--secondary:#764ba2;
+      --light:#f8f9fa;--dark:#343a40;
+      --text:#333;--card-bg:#fff;
+    }
+    body.dark{
+      --light:#1e1e2f;--dark:#f8f9fa;
+      --text:#ddd;--card-bg:#2a2a3d;
+      background:#12121c;
+    }
+    body{background:#f5f7fb;color:var(--text);line-height:1.6;transition:.3s;}
+    .dashboard-container{display:flex;min-height:100vh;}
+    .sidebar{width:250px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:20px;transition:.3s;}
+    .sidebar.hide{transform:translateX(-100%);position:absolute;z-index:999;}
+    .logo{text-align:center;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:30px;}
+    .logo h1{font-size:22px;font-weight:700;}
+    .menu{list-style:none;}
+    .menu a{color:#fff;display:flex;align-items:center;padding:12px 15px;border-radius:8px;transition:.3s;text-decoration:none;}
+    .menu a:hover,.menu a.active{background:rgba(255,255,255,.1);}
+    .menu i{margin-right:10px;}
+    .main-content{flex:1;padding:30px;}
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #e0e0e0;}
+    .hamburger{display:none;font-size:22px;cursor:pointer;color:var(--dark);}
+    .dark-toggle{margin-left:15px;cursor:pointer;font-size:18px;color:var(--primary);}
+    .user-info{display:flex;align-items:center;}
+    .user-info img{width:45px;height:45px;border-radius:50%;object-fit:cover;margin-right:10px;border:2px solid var(--primary);}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:30px;}
+    .card{background:var(--card-bg);border-radius:12px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,.05);transition:.3s;}
+    .stat-card{text-align:center;transition:.3s;}
+    .stat-card:hover{transform:translateY(-5px);}
+    .stat-card i{font-size:32px;margin-bottom:10px;color:var(--primary);}
+    .stat-card h3{font-size:26px;margin-bottom:5px;color:var(--dark);}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;}
+    .gallery-item{position:relative;cursor:pointer;border-radius:8px;overflow:hidden;}
+    .gallery-item img{width:100%;height:180px;object-fit:cover;transition:.3s;}
+    .gallery-item:hover img{transform:scale(1.05);}
+    /* Lightbox */
+    .lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:.3s;z-index:1000;}
+    .lightbox.active{opacity:1;visibility:visible;}
+    .lightbox img{max-width:90%;max-height:80%;border-radius:10px;box-shadow:0 0 20px rgba(0,0,0,.5);}
+    .lightbox .close{position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;}
+    @media(max-width:768px){.dashboard-container{flex-direction:column}.sidebar{width:220px;position:absolute;height:100%;left:0;top:0}.hamburger{display:block}}
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="logo"><h1>ফটো স্টুডিও</h1><p>পেশাদার ফটোগ্রাফি</p></div>
+      <ul class="menu">
+        <li><a href="#" class="active"><i class="fas fa-home"></i> ড্যাশবোর্ড</a></li>
+        <li><a href="#"><i class="fas fa-user"></i> প্রোফাইল</a></li>
+        <li><a href="#"><i class="fas fa-images"></i> গ্যালারি</a></li>
+        <li><a href="#"><i class="fas fa-calendar"></i> অ্যাপয়েন্টমেন্ট</a></li>
+        <li><a href="#"><i class="fas fa-cog"></i> সেটিংস</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+        <div class="welcome">
+          <h2>ড্যাশবোর্ডে স্বাগতম</h2>
+          <p>আজকের তারিখ: <span id="today-date"></span></p>
+        </div>
+        <div class="user-info">
+          <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=100&q=80" alt="ফটোগ্রাফার">
+          <div><h4>জাহিদ হাসান</h4><p>ফটোগ্রাফার</p></div>
+          <i class="fas fa-moon dark-toggle" id="darkToggle" title="Dark/Light toggle"></i>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="cards">
+        <div class="card stat-card"><i class="fas fa-images"></i><h3 data-count="1245">0</h3><p>মোট ছবি</p></div>
+        <div class="card stat-card"><i class="fas fa-calendar-check"></i><h3 data-count="38">0</h3><p>অ্যাপয়েন্টমেন্ট</p></div>
+        <div class="card stat-card"><i class="fas fa-heart"></i><h3 data-count="567">0</h3><p>পছন্দসমূহ</p></div>
+        <div class="card stat-card"><i class="fas fa-star"></i><h3 data-count="49">0</h3><p>রিভিউ স্কোর (১০০)</p></div>
+      </div>
+
+      <!-- Gallery -->
+      <h3 style="margin:15px 0;">সাম্প্রতিক প্রকল্প</h3>
+      <div class="gallery" id="gallery">
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=500&q=80" alt="ব্র্যান্ডিং শুট"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=500&q=80" alt="ফ্যাশন শুট"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=500&q=80" alt="প্রোডাক্ট ফটোগ্রাফি"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=500&q=80" alt="প্রাকৃতিক দৃশ্য"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <span class="close" id="lightboxClose" aria-label="Close">&times;</span>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      // Date
+      const today=new Date();
+      const opt={day:"numeric",month:"long",year:"numeric"};
+      document.getElementById("today-date").textContent=today.toLocaleDateString("bn-BD",opt);
+
+      // Dark Mode (remember preference)
+      const darkToggle=document.getElementById("darkToggle");
+      const saved = localStorage.getItem('dark-mode');
+      if(saved === 'on') document.body.classList.add('dark');
+
+      darkToggle.addEventListener("click",()=>{
+        document.body.classList.toggle("dark");
+        const isDark = document.body.classList.contains('dark');
+        localStorage.setItem('dark-mode', isDark ? 'on' : 'off');
+        darkToggle.classList.toggle("fa-moon");
+        darkToggle.classList.toggle("fa-sun");
+      });
+
+      // Sidebar toggle (for mobile)
+      const hamburger=document.getElementById("hamburger");
+      const sidebar=document.getElementById("sidebar");
+      hamburger.addEventListener("click",()=>sidebar.classList.toggle("hide"));
+
+      // Menu Active State
+      document.querySelectorAll(".menu a").forEach(item=>{
+        item.addEventListener("click",(e)=>{
+          e.preventDefault();
+          document.querySelectorAll(".menu a").forEach(i=>i.classList.remove("active"));
+          item.classList.add("active");
+          if(window.innerWidth <= 768) sidebar.classList.add("hide");
+        });
+      });
+
+      // Counter Animation (starts when in viewport)
+      const counters = document.querySelectorAll(".stat-card h3");
+      const animateCounter = (el, target) => {
+        let count = 0;
+        const duration = 1200; // ms
+        const frameTime = 20;
+        const totalFrames = Math.round(duration / frameTime);
+        const increment = target / totalFrames;
+        let frame = 0;
+        const timer = setInterval(()=>{
+          frame++;
+          count += increment;
+          if(frame >= totalFrames){
+            el.textContent = target;
+            clearInterval(timer);
+          } else {
+            el.textContent = Math.floor(count);
+          }
+        }, frameTime);
+      };
+
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            const el = entry.target;
+            const target = +el.getAttribute('data-count');
+            animateCounter(el, target);
+            obs.unobserve(el);
+          }
+        });
+      }, {threshold: 0.5});
+
+      counters.forEach(c => observer.observe(c));
+
+      // Lightbox
+      const lightbox=document.getElementById("lightbox");
+      const lightboxImg=document.getElementById("lightboxImg");
+      const close=document.getElementById("lightboxClose");
+
+      document.querySelectorAll(".gallery-item img").forEach(img=>{
+        img.addEventListener("click",()=>{
+          lightbox.classList.add("active");
+          lightbox.setAttribute('aria-hidden', 'false');
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      const closeLightbox = () => {
+        lightbox.classList.remove("active");
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImg.src = '';
+        document.body.style.overflow = '';
+      };
+
+      close.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (e) => { if(e.target === lightbox) closeLightbox(); });
+
+      // Keyboard support for lightbox
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape" && lightbox.classList.contains("active")) closeLightbox();
+      });
+    });
+  </script>
+</body>
+</html>
